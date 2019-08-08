@@ -1,0 +1,11 @@
+{%extends 'base.html' %}
+
+{%block page_title%}Profile{%endblock%}
+
+{%block page_heading%}Profile{%endblock%}
+
+{%block content %}
+<p>
+    Your name is {{request.user.name}}
+</p>
+{%endblock %}
