@@ -51,8 +51,17 @@ def register(request):
     if request.method == "POST":
         # process the form
         form = UserRegistrationForm(request.POST) #create the form object and populate it with the data from the user input
+        # is_valid() will ensure all the fields in the form meets the validation rules
         if form.is_valid():
-            pass
+            form.save()
+            
+            user = auth.authenticate(username = request.POST['username'], password = request.POST['password1'])
+            if user is not None:
+                auth.login(user=user, request=request)
+                messages.success(request, "Happy for you to join us!")
+                return redirect(reverse('index'))
+            else:
+                messages.error(request, "Unable to create your account at the moment")
         else:
             return render(request, 'register.html',{
                 'form':form

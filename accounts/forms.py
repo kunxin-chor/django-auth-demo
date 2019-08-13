@@ -15,6 +15,7 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ['email', 'username', 'password1', 'password2']
         
+    # 'magic function' to clean password2
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
@@ -26,3 +27,16 @@ class UserRegistrationForm(UserCreationForm):
             raise ValidationError("Please enter your password twice")
     
         return password2
+        
+    def clean_email(self):
+        # extract the email from the request
+        # (cleaned_data means data that has been processed to remove special characters etc.)
+        email = self.cleaned_data.get('email')
+        
+        # find out if there is any user using that email
+        user = User.objects.filter(email=email)
+        
+        if user.exists() is True:
+            raise ValidationError("This email is already in use!")
+            
+        return email
